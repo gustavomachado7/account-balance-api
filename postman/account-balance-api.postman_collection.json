@@ -1,0 +1,287 @@
+{
+  "info": {
+    "_postman_id": "34b969af-f5ab-4c01-80fd-f1a2c4807f05",
+    "name": "Account Balance API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "37714479"
+  },
+  "item": [
+    {
+      "name": "Observabilidade",
+      "item": [
+        {
+          "name": "Status",
+          "item": [
+            {
+              "name": "Saúde da Aplicação",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/actuator/health",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "actuator",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Informações da Aplicação",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/actuator/info",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "actuator",
+                    "info"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Início",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080"
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Métricas",
+          "item": [
+            {
+              "name": "Mensageria SQS",
+              "item": [
+                {
+                  "name": "Mensagens Processadas",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/actuator/metrics/sqs.messages.processed",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "actuator",
+                        "metrics",
+                        "sqs.messages.processed"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Mensagens Falhas",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/actuator/metrics/sqs.messages.failed",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "actuator",
+                        "metrics",
+                        "sqs.messages.failed"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Eventos de Saldo",
+              "item": [
+                {
+                  "name": "Atualizações de Saldo Ignoradas",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/actuator/metrics/balance.updates.ignored",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "actuator",
+                        "metrics",
+                        "balance.updates.ignored"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Eventos de Transação",
+              "item": [
+                {
+                  "name": "Transações Ignoradas",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/actuator/metrics/transactions.ignored",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "actuator",
+                        "metrics",
+                        "transactions.ignored"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Todas as Métricas",
+              "item": [
+                {
+                  "name": "Lista de Métricas",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/actuator/metrics",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "actuator",
+                        "metrics"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "HTTP Requests",
+              "item": [
+                {
+                  "name": "Detalhe da Métrica",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "http://localhost:8080/actuator/metrics/http.server.requests",
+                      "protocol": "http",
+                      "host": [
+                        "localhost"
+                      ],
+                      "port": "8080",
+                      "path": [
+                        "actuator",
+                        "metrics",
+                        "http.server.requests"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Contas",
+      "item": [
+        {
+          "name": "Consultar Saldo Atualizado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/balances/{accountID}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "balances",
+                "{accountID}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Contas",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/sample-accounts?limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "sample-accounts"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

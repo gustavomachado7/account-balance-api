@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.15'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.bank'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'io.awspring.cloud:spring-cloud-aws-dependencies:3.3.0'
+        mavenBom 'software.amazon.awssdk:bom:2.28.0'
+    }
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Retry com exponential backoff
+    implementation 'org.springframework.retry:spring-retry'
+    // AOP é necessário para o @Retryable funcionar
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // SQS LocalStack
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
+
+    // DynamoDB
+    implementation 'software.amazon.awssdk:dynamodb'
+    implementation 'software.amazon.awssdk:dynamodb-enhanced'
+    implementation 'software.amazon.awssdk:apache-client'
+
+    // Instant, LocalDateTime etc
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Testes
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'org.testcontainers:testcontainers:1.20.1'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.1'
+    testImplementation 'org.testcontainers:localstack:1.20.1'
+
+    testImplementation 'org.apache.commons:commons-compress:1.26.0'
+    testImplementation 'org.apache.commons:commons-lang3:3.18.0'
+
+    testImplementation 'org.awaitility:awaitility:4.2.2'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    jvmArgs '-Xshare:off'
+    jvmArgs '-javaagent:' + configurations.testRuntimeClasspath.find {
+        it.name.contains('mockito-core')
+    }
+}

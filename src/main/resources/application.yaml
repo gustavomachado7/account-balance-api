@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: balance-service
+  threads:
+    virtual:
+      enabled: true
+
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+
+
+aws:
+  endpoint: ${LOCALSTACK_ENDPOINT}
+
+  region: ${AWS_DEFAULT_REGION}
+
+  access-key: ${AWS_ACCESS_KEY_ID}
+
+  secret-key: ${AWS_SECRET_ACCESS_KEY}
+
+  sqs:
+    queue-name: ${QUEUE_NAME}
+
+  dynamodb:
+    table-name: ${DYNAMODB_TABLE_NAME}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+  endpoint:
+    health:
+      show-details: always
+
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: balance-service
+    version: 0.0.1
+    description: API de consulta de saldo baseada em eventos SQS
+
+logging:
+  level:
+    com.bank.balance: INFO
+    software.amazon.awssdk: WARN
+    io.awspring.cloud.sqs: WARN
