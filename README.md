@@ -489,15 +489,37 @@ BUILD FAILED
 
 ### Relatório de Testes do Gradle
 
-```text
-build/reports/tests/test/index.html
+Após executar os testes, o Gradle gera automaticamente um relatório HTML navegável contendo o detalhamento da execução:
+
+Para abrir o relatório no navegador, estando na raiz do projeto:
+
+Windows:
+
+```bash
+start build\reports\tests\test\index.html
 ```
 
-Após a execução, abra o arquivo em um navegador para visualizar:
+Linux:
+
+```bash
+xdg-open build/reports/tests/test/index.html
+```
+
+macOS:
+
+```bash
+open build/reports/tests/test/index.html
+```
+
+> Observação: em ambientes Linux, o comando `xdg-open` requer suporte ao ambiente gráfico e pode depender do pacote `xdg-utils`. Caso não esteja disponível, basta abrir manualmente o arquivo `index.html` no navegador.
+
+O relatório apresenta:
 - testes executados
 - tempo de execução
 - falhas e erros
 - detalhamento por classe de teste
+
+![Relatório de Testes do Gradle](docs/relatorio_testes_gradle.png)
 
 ---
 
