@@ -26,14 +26,14 @@ Processar eventos de transações de forma assíncrona, manter o saldo atualizad
 
 ## Como executar
 
-**Pré-requisitos:** Docker e Docker Compose instalados.
+**Pré-requisitos:** Docker instalado e em execução. Docker Compose disponível.
 
 Clone o repositório ou extraia o arquivo do projeto.
 
 Abra o terminal e acesse o diretório raiz da aplicação:
 
 ```bash
-cd balance
+cd account-balance-api
 ```
 
 Execute os serviços:
@@ -47,8 +47,6 @@ Isso sobe três containers:
 - `localstack` — emula SQS e DynamoDB localmente
 - `message-generator` — publica transações sintéticas na fila
 - `balance-service` — consome as mensagens e expõe a API REST
-
-A API estará disponível em `http://localhost:8080`.
 
 > O `balance-service` e o `message-generator` aguardam o LocalStack estar saudável antes de iniciar.
 
@@ -74,18 +72,15 @@ Started BalanceApplication in X seconds
 
 Caso não retorne nada, aguarde alguns segundos e execute novamente.
 
-Também é possível validar o health da aplicação:
+A API estará disponível em `http://localhost:8080`.
 
-```bash
-curl http://localhost:8080/actuator/health
-```
+Também é possível validar o health da aplicação em `http://localhost:8080/actuator/health`.
 
 Resposta esperada:
 
 ```json
 {
-  "status": "UP",
-  ...
+  "status": "UP"
 }
 ```
 
@@ -99,7 +94,7 @@ Para consultar os logs de todos os serviços da aplicação:
 docker compose logs
 ```
 
-Para acompanhar os logs em tempo real:
+Para acompanhar os logs em tempo real (e para sair da visualização, Ctrl + C):
 
 ```bash
 docker compose logs -f
@@ -200,7 +195,7 @@ Retorna o saldo atual da conta informada. O accountId deve ser um dos IDs de con
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "owner": "550e8400-e29b-41d4-a716-446655440001",
   "balance": {
-    "amount": 183.12,
+    "amount": 174.92,
     "currency": "BRL"
   },
   "updated_at": "2025-07-05T18:04:13.433-03:00"
@@ -210,13 +205,14 @@ Retorna o saldo atual da conta informada. O accountId deve ser um dos IDs de con
 ### Observabilidade
 
 ```http
+GET http://localhost:8080
 GET http://localhost:8080/actuator/health
 GET http://localhost:8080/actuator/info
 GET http://localhost:8080/actuator/metrics
 GET http://localhost:8080/actuator/metrics/http.server.requests
 ```
 
-**Métricas de negócio disponíveis:**
+**Métricas customizadas da aplicação:**
 
 ```http
 GET http://localhost:8080/actuator/metrics/sqs.messages.processed
@@ -287,6 +283,8 @@ Por isso, foi adotado o uso de Virtual Threads do Java 21 para aumentar a capaci
 
 ```yaml
 spring:
+  application:
+    name: balance-service
   threads:
     virtual:
       enabled: true
@@ -310,13 +308,13 @@ ApacheHttpClient.builder()
     .connectionMaxIdleTime(Duration.ofSeconds(5))
 ```
 
-Isso porque Virtual Threads e pool de conexões atuam em camadas diferentes. As primeiras eliminam a contenção de threads no Tomcat, enquanto o segundo evita latência por reconexão TCP com o DynamoDB.
+Isso porque Virtual Threads e pool de conexões atuam em camadas diferentes. As primeiras permitem maior concorrência com menor custo de gerenciamento de threads no Tomcat, enquanto o segundo evita latência por reconexão TCP com o DynamoDB.
 
 **Trade-off**
 
 A configuração ideal de consumidores continua dependente da capacidade computacional disponível e do perfil de carga da aplicação.
 
-Por esse motivo, a configuração final foi mantida de forma conservadora para o ambiente de avaliação, podendo ser ajustada em produção conforme:
+Por esse motivo, a configuração final desse projeto foi mantida de forma conservadora para o ambiente de avaliação, podendo ser ajustada em produção conforme:
 
 - CPU disponível
 - Memória disponível
@@ -437,7 +435,7 @@ A estrutura mantém o código organizado e permite evolução caso novas regras 
 Abra um terminal e acesse o diretório raiz da aplicação:
 
 ```bash
-cd balance
+cd account-balance-api
 ```
 
 Execute:
@@ -460,12 +458,12 @@ A suíte executa todos os testes automatizados.
   - executam sem dependências externas
   - utilizam Mockito para isolamento das regras de negócio
 
-- **Teste de integração** (`AccountRepositoryTest`)
+- **Testes de integração** (`AccountRepositoryTest`)
   - valida a integração com DynamoDB
-  - utiliza Testcontainers para subir um LocalStack temporário durante a execução. Por isso, é necessário apenas que o Docker esteja disponível e em execução.
+  - utiliza Testcontainers para subir um LocalStack temporário durante a execução. Por isso, é necessário que o Docker esteja disponível e em execução.
 
 
-Cenários cobertos:
+Principais cenários cobertos:
 
 - processamento de transação aprovada
 - rejeição de transação inválida
@@ -488,6 +486,18 @@ Em caso de falha:
 ```
 BUILD FAILED
 ```
+
+### Relatório de Testes do Gradle
+
+```text
+build/reports/tests/test/index.html
+```
+
+Após a execução, abra o arquivo em um navegador para visualizar:
+- testes executados
+- tempo de execução
+- falhas e erros
+- detalhamento por classe de teste
 
 ---
 
